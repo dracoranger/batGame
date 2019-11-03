@@ -36,7 +36,7 @@ class room():
 
     def updateLocl(self, x, y):
         self.location=(x,y)
-        print(self.location)
+
 
 def markRooms(house, location, marker):
     currentX, currentY = location
@@ -85,8 +85,7 @@ def generateHouse(players, numBats):
 
         if marker == 2:
             isValidHouse = True
-        print(str(isValidHouse) + " " + str(marker))
-        print_house(house)
+            print_house(house)
 
     roomsWithPeople = []
     for player in players:
@@ -210,7 +209,7 @@ def getSurroundings(house, room):
     message = "To the west there is a " + house[room.location[0]-1][room.location[1]].name + ". It " + house[room.location[0]-1][room.location[1]].description
     message = message + "\nTo the east there is a " + house[room.location[0]+1][room.location[1]].name + ". It " + house[room.location[0]+1][room.location[1]].description
     message = message + "\nTo the north there is a " + house[room.location[0]][room.location[1]-1].name + ". It " + house[room.location[0]][room.location[1]-1].description
-    message = message + "\nTo the south there is a " + house[room.location[0]][room.location[1]+1].name + ". It " + house[room.location[0]][room.location[1]+1].description
+    message = message + "\nTo the south there is a " + house[room.location[0]][room.location[1]+1].name + ". It " + house[room.location[0]][room.location[1]+1].description +"\n"
     return message
 
 def print_house(house):
@@ -218,9 +217,9 @@ def print_house(house):
     for i in house:
         for j in i:
             if j.name == "Wall":
-                final = final + "N"
+                final = final + "#"
             else:
-                final = final + "O"
+                final = final + "."
         final = final + "\n"
     print(final)
 
@@ -229,7 +228,7 @@ def main():
     batStupidity = .25
 
     #player object is the user calling an activity
-    players = ["Alpha","Bravo", "Charlie", "Delta", "Echo"]
+    players = ["Alpha","Bravo"]
     #should be a 2d array storing "room" objects, with a loop around the outside of walls
     #playerData contains the rooms players are in
     #might want to make it a queue
