@@ -12,7 +12,7 @@ import discord
 from discord.ext import commands
 
 client = discord.Client()
-bot = commands.Bot(command_prefix='!', description='')
+bot = commands.Bot(command_prefix='!', help_command = None)
 
 
 config = open('botData.txt', 'r')
@@ -65,6 +65,10 @@ class room():
     def updateLocl(self, x, y):
         self.location=(x,y)
 
+def _send_error_message(error):
+    return
+
+#discord.ext.commands.errors.command_not_found = _send_error_message
 
 def markRooms(house, location, marker):
     currentX, currentY = location
@@ -140,7 +144,9 @@ def moveInsideHouse(roomContainingPerson, house, command):
     locl = roomContainingPerson
     moveSuccessful = False
     newRoom = house[roomContainingPerson[0]][roomContainingPerson[1]]
-
+    print(roomContainingPerson)
+    print(house[locl[0]-1][locl[1]].canHoldPlayer)
+    print(house[locl[0]-1][locl[1]].hasPlayer)
     if command < 3:
         if command == 1:
             if house[locl[0]-1][locl[1]].canHoldPlayer and not house[locl[0]-1][locl[1]].hasPlayer:
@@ -285,11 +291,15 @@ async def on_message(message):
     BAT_TURN = "MANGO"
 
     command = ""
+    killIt = 0
 
     if message.author == client.user:
         return
     elif message.content.startswith('!'):
         command = message.content.split(" ")[0][1:].upper()
+    else:
+        killIt = killIt + 1
+
     #Message to everyone
     if command == HELP:
         help_reply = ""
@@ -303,7 +313,7 @@ async def on_message(message):
         await message.author.send(help_reply)
         return
 
-    if message.channel == client.get_channel(channel_id):
+    if message.channel == client.get_channel(channel_id) and message.content.startswith('!'):
         if command == JOIN and not game_started:
             if message.author not in players:
                 players.append(message.author)
@@ -383,13 +393,12 @@ async def on_message(message):
                 await client.get_channel(channel_id).send("swing and miss")
             validCommand = True
         else:
-            await client.get_channel(channel_id).send("Invalid command " + str(command))
+            await client.get_channel(channel_id).send("Invalid Command " + str(command))
     #message thru DM
     elif isinstance(message.channel, discord.abc.PrivateChannel) and game_started:
         if command == MOVE:
             width = find_player(message.author, house)
             direction = int(message.content.split(" ")[1])
-
             if direction > 0 and direction < 5:
                 success, newRoom = moveInsideHouse(width.location, house, direction)
                 validCommand = success
@@ -398,13 +407,14 @@ async def on_message(message):
                 elif not success:
                     await width.currentPlayer.send("You walked into a wall")
                 else:
-                    await width.currentPlayer.send("invalid command")
+                    await width.currentPlayer.send("Invalid Command" + str(command))
         elif command == GET_HOUSE_MAP and game_started:
             width = find_player(message.author, house)
             await width.currentPlayer.send(print_house(house))
         else:
             width = find_player(message.author, house)
-            await width.currentPlayer.send("Invalid command " + str(command))
+            await width.currentPlayer.send("Invalid Command " + str(command))
+
 
 
 client.run(token)
