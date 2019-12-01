@@ -54,6 +54,7 @@ class room():
     def moveFrom(self):
         ret = self.currentPlayer
         self.hasPlayer = False
+        self.currentPlayer = ""
         return ret
 
     def moveBatTo(self):
@@ -402,6 +403,7 @@ async def on_message(message):
             if direction > 0 and direction < 5:
                 success, newRoom = moveInsideHouse(width.location, house, direction)
                 validCommand = success
+                width = find_player(message.author, house)
                 if success:
                     await width.currentPlayer.send(getSurroundings(house, newRoom))
                 elif not success:
