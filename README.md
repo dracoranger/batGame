@@ -1,6 +1,6 @@
 This is a game where people play Marco Polo with a bat
 
-**Installation** 
+**Installation**
 1. Pip install discord.py
 2. Create a bot at https://discordapp.com/developers/docs/intro
 3. Download this github
@@ -9,7 +9,6 @@ This is a game where people play Marco Polo with a bat
   4b. The channel ID where you want to play  
   4c. The number of bats you're trying to track down  
   4d. The percentage of time the bats do something random, so you can't just keep calling !mango and waiting for it to charge you.  
-  (currently unimplemented)  
 5. Run with python batBot.py
 
 **Commands**  

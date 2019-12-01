@@ -145,9 +145,6 @@ def moveInsideHouse(roomContainingPerson, house, command):
     locl = roomContainingPerson
     moveSuccessful = False
     newRoom = house[roomContainingPerson[0]][roomContainingPerson[1]]
-    print(roomContainingPerson)
-    print(house[locl[0]-1][locl[1]].canHoldPlayer)
-    print(house[locl[0]-1][locl[1]].hasPlayer)
     if command < 3:
         if command == 1:
             if house[locl[0]-1][locl[1]].canHoldPlayer and not house[locl[0]-1][locl[1]].hasPlayer:
@@ -218,9 +215,20 @@ def batAI(house, playerLocl, currentLocl):
 
 
 def moveBat(house, target, bat):
-    #if random.random() < batStupidity:  #Random directions, might make too annoying
-    #    movement = random.randint(1,4)
     move = batAI(house, target.location, bat.location)
+
+    if random.random() < batStupidity:  #Random directions, might make too annoying
+        movement = random.randint(1,4)
+        if movement == 1 and house[bat.location[0]+1][bat.location[1]].canHoldPlayer and not house[bat.location[0]+1][bat.location[1]].hasBat:
+            move = (bat.location[0]+1, bat.location[1])
+        if movement == 2 and house[bat.location[0]-1][bat.location[1]].canHoldPlayer and not house[bat.location[0]-1][bat.location[1]].hasBat:
+            move = (bat.location[0]-1, bat.location[1])
+        if movement == 3 and house[bat.location[0]][bat.location[1]+1].canHoldPlayer and not house[bat.location[0]][bat.location[1]+1].hasBat:
+            move = (bat.location[0], bat.location[1]+1)
+        if movement == 4 and house[bat.location[0]][bat.location[1]-1].canHoldPlayer and not house[bat.location[0]][bat.location[1]-1].hasBat:
+            move = (bat.location[0], bat.location[1]-1)
+
+    print(move)
     bat.moveBatFrom()
     house[move[0]][move[1]].moveBatTo()
     house[move[0]][move[1]].batMoved = True
@@ -234,8 +242,9 @@ def resetBat(house, numBats):
             randomX = random.randint(1,side-1)
             randomY = random.randint(1,side-1)
             if house[randomX][randomY].canHoldPlayer and not house[randomX][randomY].hasPlayer and not house[randomX][randomY].hasBat:
+                #print(randomX)
+                #print(randomY)
                 house[randomX][randomY].moveBatTo()
-                house[randomX][randomY].batMoved = True
                 notPlaced = False
 
 def getSurroundings(house, room):
@@ -254,6 +263,8 @@ def print_house(house):
                 final = final + "#"
             elif j.hasPlayer:
                 final = final + j.currentPlayer.name[:1]
+            #elif j.hasBat: #debug, comment out before using on prod
+            #    final = final + "b"
             else:
                 final = final + "."
         final = final + "\n"
